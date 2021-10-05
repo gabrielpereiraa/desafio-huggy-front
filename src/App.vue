@@ -1,24 +1,39 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Desafio Huggy"/>
+    <transition leave-active-class="animate__animated animate__fadeOut" v-if="modalAlert.show">
+      <app-modal-alert></app-modal-alert>
+    </transition>
+
+    <transition name="fade-view" mode="out-in">
+      <router-view></router-view>
+    </transition>
+
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AppModalAlert from './components/AppModalAlert.vue';
+
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    name: "App",
+    components: {
+        AppModalAlert
+    },
+    computed: {
+        ...mapGetters({
+            modalAlert: 'getModalAlert'
+        })
+    },
+};
 </script>
 
 <style>
-#app {
-  font-family: Roboto;
-  font-style: normal;
-  margin-top: 60px;
-}
+
+  @import './assets/styles/main.css';
+  @import './assets/styles/custom.css';
+  @import './assets/styles/svg-icons-animate.css';
+  @import './assets/styles/dataTables.min.css'
+  
 </style>
