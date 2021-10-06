@@ -21,6 +21,16 @@ body{
     font-weight: normal !important;
 }
 
+.body2{
+    font-family: Roboto !important;
+    font-style: normal  !important;
+    font-weight: 400  !important;
+    font-size: 14px  !important;
+    line-height: 18px !important;
+    letter-spacing: 0.25px  !important;
+    color: #262626  !important;
+}
+
 .caption{
     font-style: normal !important; 
     font-weight: 500 !important;
@@ -28,6 +38,11 @@ body{
     line-height: 16px !important;
     letter-spacing: 0.4px !important;
 }
+
+.col-6 .btn{
+    width: 100%;
+}
+
 
 .btn {
     padding: 9px 12px 9px 12px !important;
@@ -41,8 +56,6 @@ body{
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis;
-    width: 100%;
-    resize: horizontal;
 }
 
 .btn-primary{
@@ -101,6 +114,10 @@ h4{
     font-size: 16px !important;
     font-style: normal !important;
     font-weight: normal !important;
+}
+
+.shaft-100{
+    color: #757575 !important;
 }
 
 .shaft-700{
@@ -230,12 +247,80 @@ body .form-control:focus{
     padding: 25px !important;
 }
 
+.modal-show .modal-dialog{
+    max-width: 600px;
+}
+
+.modal-header-icons{
+    align-self: center !important;
+}
+
+.modal-header-icon{
+    float: right;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+    margin-left: 15px;    
+    margin-right: 15px;
+}
+
+.modal{
+    display: block !important; /* I added this to see the modal, you don't need this */
+}
+
+.modal-delete .modal-header{
+    border: none !important;
+}
+
+.modal-delete .modal-dialog{
+    max-width: 400px;
+}
+
+/* Important part */
+.modal-create .modal-dialog{
+    overflow-y: initial !important
+}
+
+.modal-create .modal-body{
+    overflow-y: auto;
+}
+
+@media (min-width: 576px) {  
+    .modal-create .modal-body{
+        height: 50vh;
+    }
+}
+ 
+@media (min-width: 768px) {  
+    .modal-create .modal-body{
+        height: 50vh;
+    }
+}
+ 
+@media (min-width: 992px) { 
+    .modal-create .modal-body{
+        height: 50vh;
+    }
+}
+
+@media (min-width: 1200px) {  
+    .modal-create .modal-body{
+        height: 62vh;
+    }
+}
+
 .invalid-feedback{
     color: #AD2213 !important;
 }
 
 .is-invalid{
     border-color: #AD2213 !important;
+}
+
+.crimson-400{
+    color: #DE321B !important;
 }
 
 select.form-control:not([size]):not([multiple]) {
@@ -245,11 +330,13 @@ select.form-control:not([size]):not([multiple]) {
 .fade-enter-active, .fade-leave-active {
     transition: opacity 1.3s ease;
 }
-.fade-enter, .fade-leave-to
-    /* .component-fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to{
     opacity: 0;
 }
 
-.dataTables_length{
-    display: none;
+.ellipsis{
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

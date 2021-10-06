@@ -82,9 +82,14 @@
 
 .table tbody tr td{
     transition: all 0.5s !important;
+    white-space:nowrap;
 }
 
 .table-active{
+    background-color: none !important;
+}
+
+.table-active-2{
     background-color: none !important;
 }
 
@@ -92,7 +97,25 @@
     background: #F8F8F8 !important;
 }
 
+.table-active-2 td{
+    background: #F8F8F8 !important;
+}
+
 table .table-active, .table-active>td, .table-active>th {
     background-color: rgb(255 255 255 / 0%);
 }
 
+table .table-active-2, .table-active-2>td, .table-active-2>th {
+    background-color: rgb(255 255 255 / 0%);
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: all 1s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}

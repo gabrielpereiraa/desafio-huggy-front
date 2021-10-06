@@ -12,21 +12,19 @@
 </template>
 
 <script>
-import AppModalAlert from './components/AppModalAlert.vue';
+  import AppModalAlert from './components/AppModalAlert.vue';
 
-import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
 
-export default {
-    name: "App",
-    components: {
-        AppModalAlert
-    },
-    computed: {
-        ...mapGetters({
-            modalAlert: 'getModalAlert'
-        })
-    },
-};
+  export default {
+      name: "App",
+      components: { AppModalAlert },
+      computed: {
+          ...mapGetters({
+              modalAlert: 'getModalAlert'
+          })
+      }
+  };
 </script>
 
 <style>
@@ -34,6 +32,5 @@ export default {
   @import './assets/styles/main.css';
   @import './assets/styles/custom.css';
   @import './assets/styles/svg-icons-animate.css';
-  @import './assets/styles/dataTables.min.css'
   
 </style>

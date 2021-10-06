@@ -45,29 +45,40 @@
                 <h1 class="shaft-700"> {{ modalAlert.title }} </h1>
                 <p>{{ modalAlert.msg }}</p>
             </div>
-            <button class="btn btn-primary mb-4" v-on:click="hide">Fechar</button>
+            <button class="btn btn-primary mb-4" v-show="modalAlert.btnLink == ''" v-on:click="hide">Fechar</button>
+            <router-link :to="modalAlert.btnLink" class="btn btn-primary mb-4" v-show="modalAlert.btnLink != ''"  v-on:click.native="initHide()" tag="button">Fechar</router-link>
         </div>
     </app-modal>
 </template>
 
 <script>
-import AppModal from './AppModal.vue';
+    import AppModal from './AppModal.vue';
 
-import { mapGetters, mapMutations } from 'vuex';
+    import { mapGetters, mapMutations } from 'vuex';
 
-export default {
-  components: { AppModal },
-    name: "AppModalAlert",
-    computed: {
-        ...mapGetters({
-            modalAlert: 'getModalAlert'
-        })
-    },
-    methods: {
-        ...mapMutations({
-           hide: 'hideModalAlert' 
-        })
-    },
-};
-
+    export default {
+        computed: {
+            ...mapGetters({
+                modalAlert: 'getModalAlert'
+            })
+        },
+        methods: {
+            ...mapMutations({
+                hide: 'hideModalAlert' 
+            }),
+            initHide(){ 
+                let slf = this;
+                if(this.modalAlert.btnLink != ''){
+                    setTimeout(function(){
+                        slf.hide()
+                    }, 250);
+                }else{
+                    this.hide();
+                }
+                
+            }
+        },
+        components: { AppModal },
+        name: "AppModalAlert",
+    };
 </script>

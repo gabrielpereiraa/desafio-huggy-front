@@ -1,7 +1,7 @@
 <template>
     <app-modal class="modal-create">
         <div class="modal-header">
-            <h2>Adicionar novo contato</h2>
+            <h2>Editar contato</h2>
             <router-view to="/contacts" class="close" tag="button">
                 <span aria-hidden="true">&times;</span>
             </router-view>
@@ -104,32 +104,45 @@
 </template>
 
 <script>
-    import AppModal from './AppModal.vue';
+    var $ = require( 'jquery' );
 
-    import { mapGetters, mapActions, mapMutations } from 'vuex'
+    import AppModal from './AppModal.vue';
+    import { mapGetters, mapActions } from 'vuex'
 
     export default {
         data(){
             return {
-
+                formData : {}
             }
         },
         computed: {
             ...mapGetters({
                 errors : 'getErrors',
-                formData : 'getFormData'
+                getFormData : 'getFormData'
             })
         },
         methods: {
             ...mapActions({
                 checkContact : 'checkContact',
                 changeFormData : 'changeFormData',
-            }),
-            ...mapMutations({
-                clearFormData: 'clearFormData'
-            }),
+                setEditFormData : 'setEditFormData'
+            })
+        },
+        created(){
+            if(!$(`[data-id=${this.$route.params.id}]`).hasClass('table-active')){
+                $(`[data-id=${this.$route.params.id}]`).addClass('table-active-2');
+            }
+    
+            let form = this.setEditFormData(this.$route.params.id);
+            form.then(r => {
+                this.formData = r;
+            });
+        },
+        beforeRouteLeave (to, from, next) {
+            $('.table-active-2').removeClass('table-active-2');
+            next();
         },
         components: { AppModal },
-        name: "AppContactsModalContentCreate",
+        name: "AppContactsModalContentEdit",
     };
 </script>

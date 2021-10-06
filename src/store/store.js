@@ -11,7 +11,8 @@ export default new Vuex.Store({
             title: 'Atenção',
             msg: 'Ocorreu um erro',
             type: 'success',
-            show: false
+            show: false,
+            btnLink : ''
         }
     },
     getters: {
@@ -19,9 +20,23 @@ export default new Vuex.Store({
             return state.modalAlert;
         }
     },
+    actions: {
+        showSuccess({commit}, options){
+            commit('commitAlert', {
+                title : options.title ? options.title : 'Sucesso!',
+                msg : options.msg,
+                type : 'success',
+                show : 1,
+                btnLink : options.link ? options.link : ''
+            })
+        }
+    },
     mutations: {
         hideModalAlert(state){
             state.modalAlert.show = false;
+        },
+        commitAlert(state, alert){
+            state.modalAlert = alert;
         }
     },
     modules: {

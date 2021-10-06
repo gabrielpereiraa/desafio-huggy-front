@@ -5,6 +5,9 @@ import VueRouter from 'vue-router'
 import Login from './../components/AppLogin'
 import Contacts from './../components/AppContacts'
 import ContactsModalCreate from './../components/AppContactsModalCreate'
+import ContactsModalShow from './../components/AppContactsModalShow'
+import ContactsModalEdit from './../components/AppContactsModalEdit'
+import ContactsModalDelete from './../components/AppContactsModalDelete'
 
 Vue.use(VueRouter);
 //Vue.use(PortalVue);
@@ -22,6 +25,18 @@ export default new VueRouter({
             {
                 path: 'create',
                 component: ContactsModalCreate
+            },
+            {
+                path: ':id',
+                component: ContactsModalShow
+            },
+            {
+                path: 'edit/:id',
+                component: ContactsModalEdit
+            },
+            {
+                path: 'delete/:id',
+                component: ContactsModalDelete
             }
         ]
     }],

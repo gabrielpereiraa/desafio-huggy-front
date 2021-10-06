@@ -7,6 +7,7 @@ export default {
             phone: null,
             address: null,
             district: null,
+            city: null,
             state: null,
             initials: null
         },
@@ -15,12 +16,13 @@ export default {
         contacts: [
             {
                 id: 1,
-                name: 'Gabriel da Silva' ,
+                name: 'Gabriel da Silva Pereira Junior' ,
                 email: 'gabriel@hotmail.com',
                 cell: '(14)99784-6430',
                 phone: '(14)3344-2021',
                 address: 'Rua teste, 59',
                 district: 'Bairro teste',
+                city: 'Cidade teste',
                 state: 'SP',
                 profileImg: 'huggy.png',
                 initials: 'GS'
@@ -33,21 +35,54 @@ export default {
                 phone: '(14)3114-2021',
                 address: 'Rua teste, 52',
                 district: 'Bairro teste',
+                city: 'Cidade 2',
                 state: 'BA',
                 profileImg: '',
                 initials: 'JP'
-            }
-        ]
+            },
+            {
+                id: 3,
+                name: 'Arnaldo da Silva',
+                email: 'arnaldo@hotmail.com',
+                cell: '(14)95741-2350',
+                phone: '(14)3223-2526',
+                address: 'Rua teste 3, 52',
+                district: 'Bairro teste 3',
+                city: 'Cidade 3',
+                state: 'BH',
+                profileImg: '',
+                initials: 'AS'
+            },
+            {
+                id: 4,
+                name: 'Roberto Cardoso',
+                email: 'roberto@hotmail.com',
+                cell: '(14)95741-2350',
+                phone: '(14)3223-2526',
+                address: 'Rua teste 0, 51',
+                district: 'Bairro teste 0',
+                city: 'Cidade 4',
+                state: 'AC',
+                profileImg: '',
+                initials: 'RC'
+            },
+        ],
     },
     getters: {
-        getContacts(){
-            return [];
+        getContacts(state){
+            return state.contacts;
         },
         getErrors(state){
             return state.formErrors;
         },
         getFormData(state){
             return state.formData;
+        },
+        getContact: state => id =>{
+            let contact = state.contacts.find(item => {
+                return (item.id == id)
+            });
+            return contact;
         }
     },
     actions: {
@@ -56,7 +91,26 @@ export default {
             context.commit(`setInitials`);
         },
 
+        setEditFormData({getters, state}, id){
+            let contact = getters.getContact(id);
+            state.formData = {
+                id: contact.id,
+                name: contact.name,
+                email: contact.email,
+                cell: contact.cell,
+                phone: contact.phone,
+                address: contact.address,
+                city: contact.city,
+                district: contact.district,
+                state: contact.state,
+                profileImg: contact.profileImg,
+                initials: contact.initials
+            }
+            return state.formData;
+        },
+
         async checkContact({state, dispatch}){
+
             if(!state.formData.name) {
                 state.formErrors.push('name');
             }else if(state.formData.name.length < 5){
@@ -106,29 +160,51 @@ export default {
             }
         },
 
-        async commitContact({rootState, commit, state}){
-            console.log('requisição para salvar');
+        async commitContact({dispatch, commit, state}){
 
-            commit(`saveContact`, {
-                id          : 3,
+            let id = state.formData.id;
+            let responseMsg = "";
+            let mttion;
+
+            if(id){
+                console.log('requisição para editar');
+                responseMsg = "Contado alterado com sucesso.";
+                mttion = 'updateContact';
+            }else{
+                console.log('requisição para salvar');
+                id = 10;
+                responseMsg = "Novo contato adicionado com sucesso.";
+                mttion = 'saveContact';
+            }
+
+            commit(mttion, {
+                id          : id,
                 name        : state.formData.name,
                 email       : state.formData.email,
                 cell        : state.formData.cell,
                 phone       : state.formData.phone,
                 address     : state.formData.address,
                 district    : state.formData.district,
+                city        : state.formData.city,
                 state       : state.formData.state,
                 profileImg  : '',
                 initials    : state.formData.initials
             });
 
-            commit(`clearFormData`);
+            if(mttion == 'saveContact'){
+                commit(`clearFormData`);
+            }
 
-            rootState.modalAlert.show = 1;
-            rootState.modalAlert.msg = "Novo contato adicionado";
-            rootState.modalAlert.type = "success";
-            rootState.modalAlert.title = "Sucesso!" 
+            dispatch('showSuccess', { msg: responseMsg});
         },
+
+        async removeContact({dispatch, commit}, id){
+            console.log('requisição para excluir');
+            
+            commit(`deleteContact`, id);
+
+            dispatch('showSuccess', { msg: 'Contato deletado com sucesso.', link: '/contacts'});
+        },  
 
         validEmail({state}){
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -136,8 +212,24 @@ export default {
         }
     },
     mutations: {
+
+        setContacts(state, newValue){
+            state.contacts = newValue;
+        },
+
         clearFormData(state){
-            state.formData = [];
+            state.formData = {
+                id: null,
+                name: null,
+                email: null,
+                cell: null,
+                phone: null,
+                address: null,
+                district: null,
+                city: null,
+                state: null,
+                initials: null
+            };
         },
 
         setFormData(state, newValue){
@@ -146,7 +238,7 @@ export default {
                 state.formErrors.splice(index, 1);
             }
 
-            state.formData[newValue.field] = newValue.value;
+            state.formData[newValue.name] = newValue.value;
         },
 
         setInitials(state){
@@ -173,6 +265,31 @@ export default {
 
         saveContact(state, newContact){
             state.contacts.push(newContact);
+        },
+
+        updateContact(state, updatedContact){
+            var index = state.contacts.findIndex(function(item){
+                return item.id == state.formData.id;
+            });
+            
+            state.contacts[index].id = updatedContact.id;
+            state.contacts[index].name = updatedContact.name;
+            state.contacts[index].email = updatedContact.email;
+            state.contacts[index].cell = updatedContact.cell;
+            state.contacts[index].phone = updatedContact.phone;
+            state.contacts[index].address = updatedContact.address;
+            state.contacts[index].district = updatedContact.district;
+            state.contacts[index].city = updatedContact.city;
+            state.contacts[index].state = updatedContact.state;
+            state.contacts[index].initials = updatedContact.initials;
+        },
+
+        deleteContact(state, idContact){
+            var index = state.contacts.findIndex(function(item){
+                return item.id == idContact;
+            });
+
+            if (index !== -1) state.contacts.splice(index, 1);
         }
     },
 }

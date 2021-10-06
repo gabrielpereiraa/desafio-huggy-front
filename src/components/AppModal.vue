@@ -10,8 +10,8 @@
 
 <script>
 
-export default {
-    name: "AppModal"
-};
+    export default {
+        name: "AppModal"
+    };
 
 </script>
