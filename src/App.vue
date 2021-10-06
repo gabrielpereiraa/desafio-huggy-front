@@ -23,6 +23,9 @@
           ...mapGetters({
               modalAlert: 'getModalAlert'
           })
+      },
+      created(){
+        console.log(process.env.NODE_ENV, process.env.VUE_APP_TOKEN, process.env.TESTEENV);
       }
   };
 </script>
