@@ -11,8 +11,6 @@
 
 <script>
 
-    import axios from 'axios';
-
     export default {
 
         async beforeRouteLeave (to, from, next) {
