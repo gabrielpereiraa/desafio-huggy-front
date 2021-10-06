@@ -16,22 +16,7 @@
     export default {
 
         async beforeRouteLeave (to, from, next) {
-
-            let headers = { 
-                "Authorization": process.env.VUE_APP_HGTOKEN,
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-            };
-
-            axios.post(process.env.VUE_APP_HGAPI, [], { headers })
-                .then((res) => {
-                    console.log(res.data)
-                    next();
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            next();
         }
 
     }

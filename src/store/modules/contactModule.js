@@ -27,45 +27,6 @@ export default {
                 profileImg: 'huggy.png',
                 initials: 'GS'
             },
-            {
-                id: 2,
-                name: 'Jorginho pereira',
-                email: 'jorge@hotmail.com',
-                cell: '(14)98720-6440',
-                phone: '(14)3114-2021',
-                address: 'Rua teste, 52',
-                district: 'Bairro teste',
-                city: 'Cidade 2',
-                state: 'BA',
-                profileImg: '',
-                initials: 'JP'
-            },
-            {
-                id: 3,
-                name: 'Arnaldo da Silva',
-                email: 'arnaldo@hotmail.com',
-                cell: '(14)95741-2350',
-                phone: '(14)3223-2526',
-                address: 'Rua teste 3, 52',
-                district: 'Bairro teste 3',
-                city: 'Cidade 3',
-                state: 'BH',
-                profileImg: '',
-                initials: 'AS'
-            },
-            {
-                id: 4,
-                name: 'Roberto Cardoso',
-                email: 'roberto@hotmail.com',
-                cell: '(14)95741-2350',
-                phone: '(14)3223-2526',
-                address: 'Rua teste 0, 51',
-                district: 'Bairro teste 0',
-                city: 'Cidade 4',
-                state: 'AC',
-                profileImg: '',
-                initials: 'RC'
-            },
         ],
     },
     getters: {
