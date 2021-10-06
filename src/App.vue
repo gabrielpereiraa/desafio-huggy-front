@@ -25,7 +25,7 @@
           })
       },
       created(){
-        console.log(process.env.NODE_ENV, process.env.VUE_APP_TOKEN, process.env.TESTEENV);
+        console.log(process.env.NODE_ENV, process.env.VUE_APP_HGTOKEN, process.env.TESTEENV);
       }
   };
 </script>
