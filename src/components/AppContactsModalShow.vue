@@ -97,6 +97,29 @@
         },
         created(){
             this.contact = this.getContact(this.$route.params.id);
+            this.contact['initials'] = this.getInitials(this.contact.name);
+        },
+        methods: {
+            getInitials: function(name){
+                var initials = "";
+                if(!name){
+                    initials = "AA";
+                }else{
+                    if(name.includes(" ")){
+                        var names = name.split(' ');
+                        initials = names[0].substring(0, 1);
+                            
+                        if (names.length > 1) {
+                            initials += names[names.length - 1].substring(0, 1);
+                        }else if(names.length == 1){
+                            initials += names[0].slice(-1);
+                        }
+                    }else{
+                        initials = name.substring(0, 1) + name.slice(-1);
+                    }
+                }
+                return initials.toUpperCase();
+            }
         },
         computed: {
             ...mapGetters({

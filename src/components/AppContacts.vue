@@ -42,8 +42,8 @@
                                     <router-link v-bind:to="`/contacts/${contact.id}`" class="pointer" active-class="table-active" tag="tr" v-for="(contact, idx) in filterContacts" :key="idx" v-bind:data-id="contact.id">
                                         <td>
                                             <div class="d-flex">
-                                                <div v-if="contact.profileImg"><img :src="require(`@/assets/img/${contact.profileImg}`)" class="table-profile-img"></div>
-                                                <div v-else class="table-profile-circle">{{ contact.initials }}</div>
+                                                <div v-if="contact.profileImg"><img :src="`${contact.profileImg}`" class="table-profile-img"></div>
+                                                <div v-else class="table-profile-circle">{{ getInitials(contact.name) }}</div>
                                                 <div class="table-profile-name">&nbsp; {{ contact.name }}</div>
                                             </div>
                                         </td>
@@ -91,17 +91,18 @@
         data(){
             return {
                 order: '',
-                filterContacts: []
             }
         },
         computed: {
-            ...mapGetters({
-                contacts: 'getContacts',
-            })
+                ...mapGetters({
+                    contacts: 'getContacts',
+                    filterContacts: 'getFilterContacts'
+                })
         },
         methods: {
             ...mapMutations({
-                clearFormData: 'clearFormData'
+                clearFormData: 'clearFormData',
+                setFilterContacts: 'setFilterContacts'
             }),
             show(e){
                 if($(e).parents('tr').hasClass('table-active')){
@@ -116,7 +117,7 @@
                 var newArray = this.contacts.filter(function (el) {
                     return el.name.toLowerCase().includes(value.toLowerCase());
                     });
-                this.filterContacts = newArray;
+                this.setFilterContacts(newArray);
             },
             orderTable(){
                 this.filterContacts.sort(function(a, b) {
@@ -131,12 +132,30 @@
                 }else{
                     this.order = 'desc';
                 }
+            },
+            getInitials(name){
+                var initials = "";
+                if(!name){
+                    initials = "AA";
+                }else{
+                    if(name.includes(" ")){
+                        var names = name.split(' ');
+                        initials = names[0].substring(0, 1);
+                            
+                        if (names.length > 1) {
+                            initials += names[names.length - 1].substring(0, 1);
+                        }else if(names.length == 1){
+                            initials += names[0].slice(-1);
+                        }
+                    }else{
+                        initials = name.substring(0, 1) + name.slice(-1);
+                    }
+                }
+                return initials.toUpperCase();
             }
         },
-        mounted(){
-            this.filterContacts = this.contacts;
-        },
-        updated(){
+        async created(){
+            await this.$store.dispatch("getContacts")
         }
     }
 </script>

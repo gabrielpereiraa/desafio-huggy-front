@@ -13,7 +13,13 @@ export default new Vuex.Store({
             type: 'success',
             show: false,
             btnLink : ''
-        }
+        },
+        jwt: {
+            value: '',
+            type: '',
+            expiresIn: '',
+        },
+        isLogged: false
     },
     getters: {
         getModalAlert(state){
@@ -29,7 +35,16 @@ export default new Vuex.Store({
                 show : 1,
                 btnLink : options.link ? options.link : ''
             })
-        }
+        },
+        showError({commit}, options){
+            commit('commitAlert', {
+                title : options.title ? options.title : 'Atenção!',
+                msg : options.msg,
+                type : 'error',
+                show : 1,
+                btnLink : options.link ? options.link : ''
+            })
+        },
     },
     mutations: {
         hideModalAlert(state){

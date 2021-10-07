@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default {
     state: {
         formData: {
@@ -8,13 +10,12 @@ export default {
             address: null,
             district: null,
             city: null,
-            state: null,
-            initials: null
+            state: null
         },
         //formErrors: ['name','email','phone','cell','address'],
         formErrors: [],
         contacts: [
-            {
+            /*{
                 id: 1,
                 name: 'Gabriel da Silva Pereira Junior' ,
                 email: 'gabriel@hotmail.com',
@@ -24,14 +25,17 @@ export default {
                 district: 'Bairro teste',
                 city: 'Cidade teste',
                 state: 'SP',
-                profileImg: 'huggy.png',
-                initials: 'GS'
-            },
+                profileImg: '',
+            },*/
         ],
+        filterContacts: []
     },
     getters: {
         getContacts(state){
             return state.contacts;
+        },
+        getFilterContacts(state){
+            return state.filterContacts;
         },
         getErrors(state){
             return state.formErrors;
@@ -47,9 +51,23 @@ export default {
         }
     },
     actions: {
+
+        async getContacts({ commit, rootState, dispatch }) {
+            axios.get(`${process.env.VUE_APP_API_HOST}/contacts`, { headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${rootState.jwt.type} ${rootState.jwt.value}`
+            }})
+            .then((response) => {
+                commit('setFilterContacts', response.data)
+                commit('setContacts', response.data)
+            })
+            .catch(() => {
+                dispatch('showError', { msg: 'Erro ao listar os contatos. Tente novamente.', link: '/'});
+            })
+        },
+
         changeFormData(context, field){
             context.commit(`setFormData`, field);
-            context.commit(`setInitials`);
         },
 
         setEditFormData({getters, state}, id){
@@ -121,50 +139,102 @@ export default {
             }
         },
 
-        async commitContact({dispatch, commit, state}){
+        async commitContact({dispatch, commit, state, rootState}){
 
             let id = state.formData.id;
-            let responseMsg = "";
-            let mttion;
+            let response;
+            let mttions = '';
 
             if(id){
-                console.log('requisição para editar');
-                responseMsg = "Contado alterado com sucesso.";
-                mttion = 'updateContact';
+                mttions = 'updateContact';
+                response = await axios.put(`${process.env.VUE_APP_API_HOST}/contacts/${id} `,
+                    state.formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `${rootState.jwt.type} ${rootState.jwt.value}`
+                        }
+                    }
+                )
+                .then((response) => {
+                    return response.data;
+                })
+                .catch((error) => {
+                    if(error.response.data.message){
+                        return error.response.data.message;
+                    }else{
+                        return error.message;
+                    }
+                });
             }else{
-                console.log('requisição para salvar');
-                id = 10;
-                responseMsg = "Novo contato adicionado com sucesso.";
-                mttion = 'saveContact';
+                mttions = 'saveContact';
+                response = await axios.post(`${process.env.VUE_APP_API_HOST}/contacts `,
+                    state.formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `${rootState.jwt.type} ${rootState.jwt.value}`
+                        }
+                    }
+                )
+                .then((response) => {
+                    return response.data;
+                })
+                .catch((error) => {
+                    if(error.response.data.message){
+                        return error.response.data.message;
+                    }else{
+                        return error.message;
+                    }
+                });
             }
 
-            commit(mttion, {
-                id          : id,
-                name        : state.formData.name,
-                email       : state.formData.email,
-                cell        : state.formData.cell,
-                phone       : state.formData.phone,
-                address     : state.formData.address,
-                district    : state.formData.district,
-                city        : state.formData.city,
-                state       : state.formData.state,
-                profileImg  : '',
-                initials    : state.formData.initials
-            });
+            if(response.contactId){
+                commit(mttions, {
+                    id          : response.contactId,
+                    name        : state.formData.name,
+                    email       : state.formData.email,
+                    cell        : state.formData.cell,
+                    phone       : state.formData.phone,
+                    address     : state.formData.address,
+                    district    : state.formData.district,
+                    city        : state.formData.city,
+                    state       : state.formData.state,
+                    profileImg  : ''
+                });
 
-            if(mttion == 'saveContact'){
-                commit(`clearFormData`);
+                if(mttions == 'saveContact'){
+                    commit(`clearFormData`);
+                }
+                dispatch('showSuccess', { msg: response.message});
+            }else{
+                dispatch('showError', { msg: response });
             }
-
-            dispatch('showSuccess', { msg: responseMsg});
         },
 
-        async removeContact({dispatch, commit}, id){
-            console.log('requisição para excluir');
-            
-            commit(`deleteContact`, id);
+        async removeContact({dispatch, commit, rootState}, id){
+            const response = await axios.delete(`${process.env.VUE_APP_API_HOST}/contacts/${id} `,             {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${rootState.jwt.type} ${rootState.jwt.value}`
+                    }
+                }
+            )
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                if(error.response.data.message){
+                    return error.response.data.message;
+                }else{
+                    return error.message;
+                }
+            });
 
-            dispatch('showSuccess', { msg: 'Contato deletado com sucesso.', link: '/contacts'});
+            if(response.contactId){
+                commit(`deleteContact`, id);
+                dispatch('showSuccess', { msg: response.message, link: '/contacts'});
+            }else{
+                dispatch('showError', { msg: response, link: '/contacts' });
+            }
         },  
 
         validEmail({state}){
@@ -173,9 +243,12 @@ export default {
         }
     },
     mutations: {
-
         setContacts(state, newValue){
             state.contacts = newValue;
+        },
+
+        setFilterContacts(state, newValue){
+            state.filterContacts = newValue;
         },
 
         clearFormData(state){
@@ -188,8 +261,7 @@ export default {
                 address: null,
                 district: null,
                 city: null,
-                state: null,
-                initials: null
+                state: null
             };
         },
 
@@ -200,28 +272,6 @@ export default {
             }
 
             state.formData[newValue.name] = newValue.value;
-        },
-
-        setInitials(state){
-            var name = state.formData.name;
-            var initials = "";
-            if(!name){
-                initials = "AA";
-            }else{
-                if(name.includes(" ")){
-                    var names = name.split(' ');
-                    initials = names[0].substring(0, 1);
-                        
-                    if (names.length > 1) {
-                        initials += names[names.length - 1].substring(0, 1);
-                    }else if(names.length == 1){
-                        initials += names[0].slice(-1);
-                    }
-                }else{
-                    initials = name.substring(0, 1) + name.slice(-1);
-                }
-            }
-            state.formData.initials = initials.toUpperCase();
         },
 
         saveContact(state, newContact){
@@ -252,5 +302,5 @@ export default {
 
             if (index !== -1) state.contacts.splice(index, 1);
         }
-    },
+    }
 }

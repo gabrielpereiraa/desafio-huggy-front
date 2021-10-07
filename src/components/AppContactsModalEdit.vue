@@ -107,7 +107,7 @@
     var $ = require( 'jquery' );
 
     import AppModal from './AppModal.vue';
-    import { mapGetters, mapActions } from 'vuex'
+    import { mapGetters, mapActions, mapMutations } from 'vuex'
 
     export default {
         data(){
@@ -126,7 +126,10 @@
                 checkContact : 'checkContact',
                 changeFormData : 'changeFormData',
                 setEditFormData : 'setEditFormData'
-            })
+            }),
+            ...mapMutations({
+                clearFormData: 'clearFormData'
+            }),
         },
         created(){
             if(!$(`[data-id=${this.$route.params.id}]`).hasClass('table-active')){
@@ -140,6 +143,7 @@
         },
         beforeRouteLeave (to, from, next) {
             $('.table-active-2').removeClass('table-active-2');
+            this.clearFormData();
             next();
         },
         components: { AppModal },

@@ -12,7 +12,8 @@ import ContactsModalDelete from './../components/AppContactsModalDelete'
 Vue.use(VueRouter);
 //Vue.use(PortalVue);
 
-export default new VueRouter({
+//guard clause
+const router = new VueRouter({
     linkExactActiveClass: 'link-active',
     routes: [{
         path: '/',
@@ -42,3 +43,32 @@ export default new VueRouter({
     }],
     mode: 'history'
 });
+
+router.beforeResolve((to, from, next) => {
+    let data = router.app.$store.state;
+
+    let isLoggedIn = data.isLogged;
+    let jwt = data.jwt.value;
+    let expiresIn = data.jwt.expiresIn;
+
+    if(to.path == '/'){
+        next();
+    }else{
+        if(isLoggedIn){
+            var dateExpiresIn = new Date(expiresIn * 1000);
+            var dateNow = new Date();
+
+            if(jwt == "" || expiresIn == ""){
+                next("/");
+            }else if(dateNow > dateExpiresIn){
+                next("/");
+            }else{
+                next();
+            }
+        }else{
+            next("/");
+        }
+    }
+});
+
+export default router;

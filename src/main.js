@@ -12,6 +12,11 @@ Vue.use(VueTheMask)
 
 Vue.config.productionTip = false
 
+
+if(!process.env.VUE_APP_API_HOST) throw new Error('.ENV: VUE_APP_API_HOST is not defined.');
+if(!process.env.VUE_APP_API_AUTHORIZATION) throw new Error('.ENV: VUE_APP_API_AUTHORIZATION  is not defined.');
+
+
 new Vue({
   render: h => h(App),
   store,
