@@ -1,7 +1,7 @@
 <br />
 <br/>
 <p align="center" id="nome-do-projeto">
-  <h3 align="center">Desafio Huggy: Front End (API)</h3>
+  <h3 align="center">Desafio Huggy: Front End (Telas)</h3>
   <p align="center">
     Front End do desafio técnico proposto pela Huggy.
     <br />
