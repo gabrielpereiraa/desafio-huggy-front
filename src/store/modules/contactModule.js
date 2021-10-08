@@ -12,22 +12,8 @@ export default {
             city: null,
             state: null
         },
-        //formErrors: ['name','email','phone','cell','address'],
         formErrors: [],
-        contacts: [
-            /*{
-                id: 1,
-                name: 'Gabriel da Silva Pereira Junior' ,
-                email: 'gabriel@hotmail.com',
-                cell: '(14)99784-6430',
-                phone: '(14)3344-2021',
-                address: 'Rua teste, 59',
-                district: 'Bairro teste',
-                city: 'Cidade teste',
-                state: 'SP',
-                profileImg: '',
-            },*/
-        ],
+        contacts: [],
         filterContacts: []
     },
     getters: {
