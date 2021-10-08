@@ -20,7 +20,7 @@
 <br/>
 
 ## 🖥️ Sobre o projeto
-Este projeto todas as telas que vão ser necessárias para realizar as operações do CRUD.
+Este projeto contém todas as telas que vão ser necessárias para realizar as operações do CRUD.
 
 > Este projeto foi desenvolvido apenas avalição de aptidão.
 
